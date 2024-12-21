@@ -1,0 +1,23 @@
+﻿syntax = "proto3";
+
+package DemoServiceProto;
+
+service Dispatcher {
+  rpc SendMsg (Msg) returns (MsgResponse);
+  rpc IsDispatcherAlive (IsDispatcherAliveMessage) returns (IsDispatcherAliveMessage);
+}
+message Msg {
+  string sentMessage = 1; //messaggio da inviare al dispatcher
+  string mId = 2; //matricola della macchina a cui inviare il msg.
+  int32 userId = 3;
+  string dateTime = 4;
+  string model = 5;
+}
+
+message MsgResponse {
+  bool response = 1; 
+}
+
+message IsDispatcherAliveMessage {
+
+}

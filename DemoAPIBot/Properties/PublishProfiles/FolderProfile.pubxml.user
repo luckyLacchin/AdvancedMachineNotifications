@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Users\gabriele.lacchin\source\repos\TelegramBotDemo2\DemoAPIBot\bin\Release\net6.0\publish\</_PublishTargetUrl>
+    <History>True|2023-07-13T12:11:17.5985209Z;True|2023-07-05T11:22:10.1092909+02:00;True|2023-07-05T11:20:05.1903824+02:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

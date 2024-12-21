@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="ProtosMessangers\dispatch.proto" />
+    <None Remove="ProtosServerAPI\serverApi.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.53.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="ProtosMessangers\dispatch.proto" />
+    <Protobuf Include="ProtosServerAPI\serverApi.proto" />
+  </ItemGroup>
+
+</Project>

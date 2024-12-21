@@ -1,0 +1,62 @@
+version: '3.4'
+
+services:
+  demoapi:
+    image: ${DOCKER_REGISTRY-}demoapi:1.2
+    container_name: demoapi
+    build:
+      context: .
+      dockerfile: DemoAPIBot/Dockerfile
+    volumes:
+      - ./DemoAPIBot/Db:/ServerApiDb
+      - ./DemoAPIBot/Certificates:/CertificatoDemoAPI
+    environment:
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/CertificatoDemoAPI/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=credentials_test
+      - ASPNETCORE_URLS="https://+;http://+"
+      - DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false
+      - DOTNET_USE_POLLING_FILE_WATCHER=true
+    expose:
+      - "8080" # gRPC
+    ports:
+      - 8447:8447
+    networks:
+      - proxy-net
+      - botNetwork
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=krzo_proxy-net"
+      # HTTPS
+      - "traefik.http.services.demoapi-https.loadbalancer.server.port=8447"
+      - "traefik.http.routers.demoapi-https.rule=Host(`blmgroup.pazpi.top`)"
+      - "traefik.http.routers.demoapi-https.entrypoints=websecure"
+      - "traefik.http.routers.demoapi-https.tls=true"
+      - "traefik.http.routers.demoapi-https.tls.certresolver=lehttpchallenge"
+
+  telegramclientserver:
+    image: ${DOCKER_REGISTRY-}telegramclientserver
+    container_name: telegramclientserver
+    build:
+      context: .
+      dockerfile: TelegramClientServer/Dockerfile
+    volumes:
+      - ./TelegramClientServer/Db:/TelegramDb
+      - ./TelegramClientServer/Certificates:/CertificatoTelegram
+    environment:
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/CertificatoTelegram/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=credentials_test
+      - ASPNETCORE_URLS="https://+;http://+"
+      - DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false
+      - DOTNET_USE_POLLING_FILE_WATCHER=true
+    expose:
+      - "8008" # gRPC
+    networks:
+      - botNetwork
+    labels:
+      - "traefik.enable=false"
+
+networks:
+  botNetwork:
+    name: botNetwork_custom
+  proxy-net:
+    name: krzo_proxy-net

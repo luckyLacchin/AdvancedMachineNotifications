@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package DemoServiceProto;
+
+service ServerApi {
+  // it notifies the serverAPI that the messanger is alive and gives the ip and the port where it listens.
+  rpc IsServerAlive (ServerAlive) returns (ServerAliveResponse);
+  rpc SendToken (TokenRequest) returns (TokenResponse);
+  rpc GetSubs (GetSubsRequest) returns (getSubsResponse);
+  rpc DeleteSub (DeleteSubRequest) returns (DeleteSubResponse);
+  rpc SendId (SendIdRequest) returns (SendIdResponse);
+  rpc GetMessagesMId (GetMessagesMIdRequest) returns (GetMessagesMIdResponse);
+}
+
+// The request message containing the user's name.
+message ServerAlive {
+  string name = 1; //tipologia del server bot collegato, f.e. "telegram"
+  int32 port = 2; //porta del server messanger in ascolto, sono definite nell' appsettings di ciascuno progetto.
+  string ip = 3; //ip del server messanger in ascolto, dovrebbe essere sempre localhost
+  bool https = 4;
+}
+
+// The response message containing a string saying that the connection has been done.
+message ServerAliveResponse {
+  string message = 1; 
+}
+/*
+Questo è il proto creato per vedere se un messanger, f.e. TelegramClientServer è acceso, se lo fosse ServerAPI si connette
+a suo volta al TelegramClientServer mediante connessione Grpc come client! In questo modo
+la connessione reciproca è stata fatta.
+*/
+
+message TokenRequest {
+	string token = 1;
+	string dispatcher = 2;
+}
+
+message TokenResponse {
+	bool outcome = 1;
+	string mId = 2;
+}
+
+message GetSubsRequest {
+	repeated int32 userId = 1;
+}
+
+message getSubsResponse {
+	bool outcome = 1;
+	repeated string mIds = 2;
+}
+
+message DeleteSubRequest {
+	string mId = 1;
+	string dispatcher = 2;
+	repeated int32 usersId = 3;
+}
+
+message DeleteSubResponse {
+	bool outcome = 1;
+	int32 userId = 2;
+}
+
+message SendIdRequest {
+  int32 userId = 1; 
+  string token = 2;
+  string dispatcher = 3;
+}
+
+message SendIdResponse {
+  bool outcome = 1; 
+}
+
+message GetMessagesMIdRequest {
+	string mId = 1;
+}
+message MessageProto {
+	string mId = 1;
+	string model = 2;
+	string mex = 3;
+	string date = 4;
+}
+message GetMessagesMIdResponse {
+	repeated MessageProto messages = 1;
+	bool outcome = 2;
+}

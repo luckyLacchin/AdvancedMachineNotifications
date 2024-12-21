@@ -1,0 +1,36 @@
+version: '3.4'
+
+services:
+   seqService:
+      image: datalust/seq
+      container_name: seqServiceContainer
+      volumes:
+         - seqVolume:/data
+      environment:
+         - ACCEPT_EULA=Y
+      expose:
+         - 5341
+         - 80
+      ports:
+         - 80:80
+      networks:
+         - proxy-net
+         - botNetwork
+      labels:
+         - "traefik.enable=true"
+         - "traefik.docker.network=krzo_proxy-net"
+         # HTTPS
+         - "traefik.http.services.seq-https.loadbalancer.server.port=80"
+         - "traefik.http.routers.seq-https.rule=Host(`logs.pazpi.top`)"
+         - "traefik.http.routers.seq-https.entrypoints=websecure"
+         - "traefik.http.routers.seq-https.tls=true"
+         - "traefik.http.routers.seq-https.tls.certresolver=lehttpchallenge"
+
+networks:
+   botNetwork:
+      name: botNetwork_custom
+   proxy-net:
+      name: krzo_proxy-net
+
+volumes:
+   seqVolume: #when we have volumes created automatically by docker and not local files.    
